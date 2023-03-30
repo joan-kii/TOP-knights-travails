@@ -1,7 +1,8 @@
 class Knight {
   constructor(x = 3, y = 3) {
-    this.x = x;
+    this.x = x
     this.y = y;
+    this.nextMoves = null;
   }
 
   get position() {
@@ -10,7 +11,8 @@ class Knight {
 }
 
 class Board {
-  constructor() {
+  constructor(knight = new Knight(3, 3)) {
+    this.root = knight;
     this.board = this.createBoard();
   }
 
@@ -23,6 +25,9 @@ class Board {
     }
 
     return board;
+  }
+
+  getMoves() {
   }
 }
 

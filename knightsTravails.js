@@ -7,10 +7,14 @@ class Knight {
 class Graph {
   #adjList; 
   #board;
+  #visited;
+  #moves;
 
   constructor() {
     this.#adjList = new Map();
     this.#board = this.createBoard();
+    this.#visited = new Set();
+    this.#moves = [];
     this.graph = this.createGraph();
   }
 
@@ -74,22 +78,36 @@ class Graph {
   }
 
   knightMoves(start, end) {
-    let count = 0;
-    let path = [];
-
-    // seguir aquí
+    if (start === end) {
+      this.#moves.push(start);
+      console.log(`=> You made it in ${this.#moves.length} moves! Here's your path:`);
+      for (let move of this.#moves) console.log(move);
+      return [...this.#moves, start];
+    }
     
-    /* if (start.position !== end.position) {
-      for (let cell of this.graph.get(start.position)) {
-        const next = this.graph.get(start.position)[cell];
-        this.knightMoves(next, end);
+    // If the node has not been visited yet, mark it as visited
+    if (!this.#visited.has(start)) {
+      this.#visited.add(start);
+      this.#moves.push(start);
+      
+      // Recursively visit each neighboring node
+      const neighbors = this.graph.get(start);
+      let shortestPath = null;
+
+      for (let neighbor of neighbors) {
+        const newPath = this.knightMoves(neighbor, end);
+        if (newPath && (!shortestPath || newPath.length < shortestPath.length)) {
+          shortestPath = newPath;
+          return shortestPath;
+        }
+        this.#moves.pop();
       }
-    } */
-    console.log(`=> You made it in ${count}. Here is your path\n ${path}`);
+    }
+    // seguir aquí (comparar todos los paths)
   }
 }
 
 const startKnight = new Knight([3, 3]);
-const endKnight = new Knight([4, 5]);
+const endKnight = new Knight([4, 3]);
 const board = new Graph();
-board.knightMoves(startKnight, endKnight);
+board.knightMoves(startKnight.position, endKnight.position);

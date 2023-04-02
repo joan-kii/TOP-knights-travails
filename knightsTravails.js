@@ -7,14 +7,10 @@ class Knight {
 class Graph {
   #adjList; 
   #board;
-  #visited;
-  #moves;
 
   constructor() {
     this.#adjList = new Map();
     this.#board = this.createBoard();
-    this.#visited = new Set();
-    this.#moves = [];
     this.graph = this.createGraph();
   }
 
@@ -78,36 +74,42 @@ class Graph {
   }
 
   knightMoves(start, end) {
-    if (start === end) {
-      this.#moves.push(start);
-      console.log(`=> You made it in ${this.#moves.length} moves! Here's your path:`);
-      for (let move of this.#moves) console.log(move);
-      return [...this.#moves, start];
-    }
+    const startNode = start.position;
+    const endNode = end.position;
+    const queue = [startNode];
+    const shortestPath = {[startNode]: [startNode]};
     
-    // If the node has not been visited yet, mark it as visited
-    if (!this.#visited.has(start)) {
-      this.#visited.add(start);
-      this.#moves.push(start);
+    while (queue.length > 0) {
+      const currentNode = queue.shift();
       
-      // Recursively visit each neighboring node
-      const neighbors = this.graph.get(start);
-      let shortestPath = null;
-
-      for (let neighbor of neighbors) {
-        const newPath = this.knightMoves(neighbor, end);
-        if (newPath && (!shortestPath || newPath.length < shortestPath.length)) {
-          shortestPath = newPath;
-          return shortestPath;
+      if (currentNode === endNode) {
+        console.log(`=> You made it in ${shortestPath[currentNode].length - 1} moves!  Here's your path:`)
+        for (let move of shortestPath[currentNode]) {
+          console.log(move);
         }
-        this.#moves.pop();
+        return ;
+      }
+      
+      const neighbors = this.graph.get(currentNode);
+      for (let neighbor of neighbors) {
+        if (!shortestPath.hasOwnProperty(neighbor)) {
+          queue.push(neighbor);
+          shortestPath[neighbor] = [...shortestPath[currentNode], neighbor];
+        }
       }
     }
-    // seguir aquí (comparar todos los paths)
   }
 }
 
-const startKnight = new Knight([3, 3]);
-const endKnight = new Knight([4, 3]);
+const startKnight = new Knight([0, 0]);
+const endKnight = new Knight([7, 7]);
 const board = new Graph();
-board.knightMoves(startKnight.position, endKnight.position);
+board.knightMoves(startKnight, endKnight);
+/* => You made it in 6 moves!  Here's your path:
+0,0
+1,2
+2,4
+3,6
+5,7
+6,5
+7,7 */

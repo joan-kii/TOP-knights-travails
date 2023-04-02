@@ -87,7 +87,7 @@ class Graph {
         for (let move of shortestPath[currentNode]) {
           console.log(move);
         }
-        return ;
+        return;
       }
       
       const neighbors = this.graph.get(currentNode);

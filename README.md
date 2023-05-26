@@ -1,1 +1,1 @@
-# TOP-knights-travails
+# The Odin Project Chess Exercise
